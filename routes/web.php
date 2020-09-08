@@ -17,4 +17,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::post('/login', 'LoginController@verify');
+
+/* Route::get('/login', 'LoginController@index');
+
+Route::post('/login', 'LoginController@verify'); */
+
 Route::get('/home', 'HomeController@index')->name('home');
