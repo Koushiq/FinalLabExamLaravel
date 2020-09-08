@@ -3,39 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
+use App\User;
 
 class LoginController extends Controller
 {
-    //
-    function index()
+    function index(Request $req)
     {
-        return view('login');
-    }
-
-    function verify(Request $request)
-    {
-        $data = DB::table('alluser')
-                    ->where('username',$request->username)
-                    ->where('password',$request->password)
-                    ->get();
-
-        
-
-        if(count($data)>0)
+        if($req->session()->has('username'))
         {
-            $request->session()->put('username',$request->username);
-
-            if($data[0]->type=="admin")
-            {
-                $request->session()->put('type',"admin");
-            }
-            return redirect()->route('home.index');
+            // if($req->session()->get('type') == 'admin')
+            // {
+            //     return redirect('/admin');
+            // }
+            // else
+            // {
+            //     return redirect('/employer');
+            // }
+            return redirect('/');
         }
         else
         {
-            $request->session()->flash('msg', 'invalid username/password');
-            return redirect()->route('login.index');
+            return view('login');
+        }
+    }
+
+    function entry(Request $req)
+    {
+        $cred =  new User();
+
+        $user = $cred->where('username',$req->username)->where('password',$req->password)->get();
+        
+        if(count($user)>0)
+        {
+            $req->session()->put('username',$user[0]['username']);
+            if($user[0]['type']=='admin')
+            {
+                $req->session()->put('type','admin');
+                // return redirect('/admin');
+            }
+            else
+            {
+                $req->session()->put('type','employer');
+                // return redirect('/employer');
+            }
+            return redirect('/');
+
+        }
+        else
+        {
+            return "not found";
         }
     }
 }

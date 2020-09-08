@@ -4,25 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Job;
+
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    function index(Request $req)
     {
-        $this->middleware('auth');
+        $jobList = Job::all();
+        
+        return view('index')->with('jobList',$jobList);
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
+    function search(Request $req)
     {
-        return view('home');
+        $jobList = Job::where('title', 'like', '%'.$req->key.'%')
+                        ->orWhere('company', 'like', '%'.$req->key.'%')
+                        ->get();
+        
+        return view('joblist')->with('jobList',$jobList);
     }
 }
