@@ -15,9 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+//Auth::routes();
 
-Route::post('/login', 'LoginController@verify');
+Route::get('/login', 'LoginController@index')->name('login');
+
+Route::post('/login', 'LoginController@verify')->name('login');
 
 /* Route::get('/login', 'LoginController@index');
 
